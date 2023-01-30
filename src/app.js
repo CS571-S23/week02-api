@@ -60,13 +60,15 @@ app.set('trust proxy', 1);
 // Allow CORS
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "X-CS571-ID, Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
 // Require WISC Badger ID
 app.use((req, res, next) => {
-    if (!req.header('X-CS571-ID')) {
+    if (req.method === 'OPTIONS') {
+        next();
+    } else if (!req.header('X-CS571-ID')) {
         res.status(401).send({
             msg: "You must specify a header X-CS571-ID!"
         });
